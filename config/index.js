@@ -16,6 +16,10 @@ const config = {
   pokedex: {
     api: process.env.POKEDEX_API,
   },
+  auth: {
+    secret: process.env.AUTH_SECRET,
+    expiry: process.env.AUTH_EXPIRY,
+  },
 };
 
 module.exports = config;

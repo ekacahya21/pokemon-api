@@ -10,10 +10,12 @@ const app = express();
 const config = require('./config');
 const gqlSchema = require('./graphql/schemas');
 const gqlResolvers = require('./graphql/resolvers');
+const authMiddleware = require('./middlewares/authMiddleware');
 
 const dbAddress = `${config.db.address.replace(/\$USER|\$PASS/gi, (match) => config.db.credential[match])}`;
 
 app.use(bodyParser.json());
+app.use(authMiddleware);
 app.use(
   '/gql',
   graphqlHTTP({

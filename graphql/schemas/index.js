@@ -25,6 +25,12 @@ module.exports = buildSchema(`
     updatedAt: String!
   }
 
+  type AuthData {
+    userId: ID!
+    token: String!
+    expiredAt: String!
+  }
+
   input UserInput {
     email: String!
     username: String!
@@ -39,11 +45,12 @@ module.exports = buildSchema(`
   type Query {
     pokemons: [Pokemon!]!
     users: [User!]!
+    login(email: String!, password: String!): AuthData! 
   }
 
   type Mutation {
     catchPokemon(input: PokemonInput): Pokemon
-    registerUser(input: UserInput): User
+    signUp(input: UserInput): User
     releasePokemon(nickname: String!): Pokemon
   }
 

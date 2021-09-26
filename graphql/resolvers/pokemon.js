@@ -3,6 +3,7 @@ const { Types } = require('mongoose');
 const Pokemon = require('../../models/pokemon');
 const { transformPokemon } = require('../../utils/transformers');
 const { getUserById } = require('../../resources/userResource');
+const { validateAuth } = require('../../utils/authHelper');
 
 const pokemons = async () => {
   try {
@@ -13,21 +14,23 @@ const pokemons = async () => {
   }
 };
 
-const catchPokemon = async ({ input }) => {
+const catchPokemon = async ({ input }, req) => {
   try {
-    const userId = '615078bb735e574e12f8986b';
+    await validateAuth(req);
+
+    const { userId } = req;
     const findUser = Types.ObjectId.isValid(userId) && (await getUserById(userId));
     if (!findUser) {
       throw new Error('User is not exists');
     }
 
-    const pokemonExists = await Pokemon.findOne({ nickname: input.nickname });
+    const pokemonExists = await Pokemon.findOne({ nickname: input.nickname.toLowerCase() });
     if (pokemonExists) {
       throw new Error('Pick other nickname!');
     }
 
     const pokemon = new Pokemon({
-      nickname: input.nickname,
+      nickname: input.nickname.toLowerCase(),
       refId: input.refId,
       catchedBy: userId,
     });
@@ -43,8 +46,10 @@ const catchPokemon = async ({ input }) => {
   }
 };
 
-const releasePokemon = async (args) => {
+const releasePokemon = async (args, req) => {
   try {
+    await validateAuth(req);
+
     const pokemon = await Pokemon.findOne({ nickname: args.nickname }).populate('catchedBy');
     if (!pokemon) {
       throw new Error('Pokemon not found!');

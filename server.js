@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const express = require('express');
+const cors = require('cors');
 const chalk = require('chalk');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -14,6 +15,7 @@ const authMiddleware = require('./middlewares/authMiddleware');
 
 const dbAddress = `${config.db.address.replace(/\$USER|\$PASS/gi, (match) => config.db.credential[match])}`;
 
+app.use(cors(config.cors));
 app.use(bodyParser.json());
 app.use(authMiddleware);
 app.use(

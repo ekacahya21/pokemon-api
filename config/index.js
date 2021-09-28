@@ -20,6 +20,9 @@ const config = {
     secret: process.env.AUTH_SECRET,
     expiry: process.env.AUTH_EXPIRY,
   },
+  cors: {
+    origin: 'http://localhost:3000',
+  },
 };
 
 module.exports = config;

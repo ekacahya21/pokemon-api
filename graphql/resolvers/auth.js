@@ -15,9 +15,9 @@ const users = async () => {
   }
 };
 
-const login = async ({ email, password }) => {
+const login = async ({ userID, password }) => {
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ $or: [{ email: userID }, { username: userID }] });
     if (!user) {
       throw new Error("User doesn't exist!");
     }
@@ -41,11 +41,11 @@ const login = async ({ email, password }) => {
 };
 
 const signUp = async ({ input }) => {
-  const userExists = await User.findOne({ username: input.username });
-  if (userExists) {
-    throw new Error('User already exists');
-  }
   try {
+    const userExists = await User.findOne({ username: input.username });
+    if (userExists) {
+      throw new Error('User already exists');
+    }
     const user = new User({
       email: input.email,
       username: input.username,

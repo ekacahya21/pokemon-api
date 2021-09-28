@@ -45,7 +45,7 @@ module.exports = buildSchema(`
   type Query {
     pokemons: [Pokemon!]!
     users: [User!]!
-    login(email: String!, password: String!): AuthData! 
+    login(userID: String!, password: String!): AuthData
   }
 
   type Mutation {

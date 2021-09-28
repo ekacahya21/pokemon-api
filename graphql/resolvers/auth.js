@@ -5,11 +5,23 @@ const { compareSync } = require('bcryptjs');
 const User = require('../../models/user');
 const { auth } = require('../../config');
 const { transformUser } = require('../../utils/transformers');
+const { validateAuth } = require('../../utils/authHelper');
 
 const users = async () => {
   try {
     const fetchedUsers = await User.find();
     return fetchedUsers.map((user) => transformUser(user));
+  } catch (error) {
+    return error;
+  }
+};
+
+const getProfile = async (_, req) => {
+  try {
+    await validateAuth(req);
+
+    const user = await User.findById(req.userId);
+    return transformUser(user);
   } catch (error) {
     return error;
   }
@@ -61,4 +73,5 @@ module.exports = {
   login,
   users,
   signUp,
+  getProfile,
 };

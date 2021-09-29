@@ -6,7 +6,7 @@ module.exports = buildSchema(`
     email: String!
     username: String!
     password: String
-    catchedPokemons: [Pokemon!]
+    catchedPokemons: [UserPokemon!]
     createdAt: String!
     updatedAt: String!
   }
@@ -20,11 +20,12 @@ module.exports = buildSchema(`
   }
 
   type PokemonDetail {
+    id: String!
     name: String!
     abilities: [PokemonAbility!]
   }
 
-  type Pokemon {
+  type UserPokemon {
     _id: ID!
     nickname: String!
     refId: String!
@@ -52,7 +53,8 @@ module.exports = buildSchema(`
   }
 
   type Query {
-    pokemons: [Pokemon!]!
+    userPokemon: [UserPokemon!]!
+    pokemons(page: Int!, limit: Int): [PokemonDetail!]!
     users: [User!]!
     getProfile: User!
     login(userID: String!, password: String!): AuthData
@@ -60,8 +62,8 @@ module.exports = buildSchema(`
 
   type Mutation {
     signUp(input: UserInput): User
-    catchPokemon(input: PokemonInput): Pokemon
-    releasePokemon(nickname: String!): Pokemon
+    catchPokemon(input: PokemonInput): UserPokemon
+    releasePokemon(nickname: String!): UserPokemon
   }
 
   schema {

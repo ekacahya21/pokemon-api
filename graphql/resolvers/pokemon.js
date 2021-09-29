@@ -2,10 +2,34 @@ const { Types } = require('mongoose');
 
 const Pokemon = require('../../models/pokemon');
 const { transformPokemon } = require('../../utils/transformers');
+const { getList, getDetail } = require('../../resources/pokedex');
 const { getUserById } = require('../../resources/userResource');
 const { validateAuth } = require('../../utils/authHelper');
 
-const pokemons = async () => {
+const pokemons = async ({ page = 1, limit = 30 }) => {
+  try {
+    const fetchPokemon = await getList('pokemon', (page - 1) * limit, limit);
+    return (
+      fetchPokemon.results &&
+      fetchPokemon.results.map(async (pokemon) => {
+        const id = pokemon.url
+          .split('/')
+          .filter((item) => item)
+          .slice(-1)[0];
+        const pokemonDetail = await getDetail('pokemon', id);
+        return {
+          id,
+          name: pokemon.name,
+          abilities: pokemonDetail.abilities,
+        };
+      })
+    );
+  } catch (error) {
+    return error;
+  }
+};
+
+const userPokemon = async () => {
   try {
     const fetchPokemon = await Pokemon.find();
     return fetchPokemon.map((pokemon) => transformPokemon(pokemon));
@@ -64,6 +88,7 @@ const releasePokemon = async (args, req) => {
 
 module.exports = {
   pokemons,
+  userPokemon,
   catchPokemon,
   releasePokemon,
 };

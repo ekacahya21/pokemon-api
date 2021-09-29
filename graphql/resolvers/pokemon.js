@@ -6,9 +6,19 @@ const { getList, getDetail } = require('../../resources/pokedex');
 const { getUserById } = require('../../resources/userResource');
 const { validateAuth } = require('../../utils/authHelper');
 
-const pokemons = async ({ page = 1, limit = 30 }) => {
+const pokemonSingle = async ({ id }) => {
   try {
-    const fetchPokemon = await getList('pokemon', (page - 1) * limit, limit);
+    const pokemonDetail = await getDetail('pokemon', id);
+
+    return pokemonDetail;
+  } catch (error) {
+    return error;
+  }
+};
+
+const pokemons = async ({ offset = 0, limit = 30 }) => {
+  try {
+    const fetchPokemon = await getList('pokemon', offset, limit);
     return (
       fetchPokemon.results &&
       fetchPokemon.results.map(async (pokemon) => {
@@ -88,6 +98,7 @@ const releasePokemon = async (args, req) => {
 
 module.exports = {
   pokemons,
+  pokemonSingle,
   userPokemon,
   catchPokemon,
   releasePokemon,

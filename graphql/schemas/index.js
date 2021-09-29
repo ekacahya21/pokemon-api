@@ -19,10 +19,33 @@ module.exports = buildSchema(`
     ability: Ability!
   }
 
+  type Move {
+    name: String!
+  }
+
+  type PokemonMove {
+    move: Move!
+  }
+
+  type Species {
+    name: String!
+  }
+
+  type TypeDetail {
+    name: String!
+  }
+
+  type PokemonType {
+    type: TypeDetail!
+  }
+
   type PokemonDetail {
     id: String!
     name: String!
+    species: Species!
     abilities: [PokemonAbility!]
+    moves: [PokemonMove!]
+    types: [PokemonType!]
   }
 
   type UserPokemon {
@@ -54,7 +77,8 @@ module.exports = buildSchema(`
 
   type Query {
     userPokemon: [UserPokemon!]!
-    pokemons(page: Int!, limit: Int): [PokemonDetail!]!
+    pokemons(offset: Int, limit: Int): [PokemonDetail!]!
+    pokemonSingle(id: String!): PokemonDetail!
     users: [User!]!
     getProfile: User!
     login(userID: String!, password: String!): AuthData

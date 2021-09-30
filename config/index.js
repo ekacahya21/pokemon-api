@@ -21,7 +21,7 @@ const config = {
     expiry: process.env.AUTH_EXPIRY,
   },
   cors: {
-    origin: 'http://localhost:3000',
+    origin: '*',
   },
 };
 

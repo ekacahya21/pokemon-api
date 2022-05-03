@@ -28,7 +28,7 @@ app.use(
 );
 
 app.get('/ping', (req, res) => {
-  res.send('pong!');
+  res.send('pong hello!');
 });
 
 console.log(chalk.magenta('POKEMON API INITIALIZING . . .'));
